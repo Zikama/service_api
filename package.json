@@ -1,0 +1,28 @@
+{
+  "name": "service-api",
+  "version": "1.0.0",
+  "description": "A nodejs service to handle third-party services linked to chimp tracker web applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lawal-olaotan/service_api.git"
+  },
+  "author": "Lawal Olaotan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lawal-olaotan/service_api/issues"
+  },
+  "homepage": "https://github.com/lawal-olaotan/service_api#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1377.0",
+    "cookie-parser": "^1.4.6",
+    "crypto-random-string": "^5.0.0",
+    "express": "^4.18.2",
+    "logger": "^0.0.1",
+    "morgan": "^1.10.0",
+    "winston": "^3.8.2"
+  }
+}
