@@ -1,36 +1,42 @@
-import express from 'express';
-import twillo from 'twillo';
-import crypto from 'crypto-random-string'
-
+const {param} = require ('../db/config.js')
+const express = require('express')
+const {verificationMessage} = require("../middleware/twillo.js"); 
+const {createRecord} = require("../db/queries/verify.js")
+require('dotenv').config()
+const router = express.Router();
 
 
 
 // twillo credentials as global variables
-const {TWILLO_SID,TWILLO_TOKEN} = process.env
-const twilloClient = twillo(TWILLO_SID,TWILLO_TOKEN)
-const router = express.Router();
 
 
 // function verifies user whatsapp number
-export default router.post('/verify',async(req,res) => {
-    const {whatsapp_number} = req.body
+router.post('/',async(req,res) => {
+
+    // whatsapp_number
+    const {whatsapp_number} = req.body;
 
     // provision DB 
-    const isNumberVerified = await checkNumber(whatsapp_number);
+    // const isNumberVerified = await checkUserbyNumber(whatsapp_number);
+    // if(isNumberVerified) res.status(400).send('already connected');
 
-    if(isNumberVerified) res.status(400).send('already connected')
+    // turn it to hash numbers 
+    const hashedData =  verificationMessage(whatsapp_number);
+    const data = await createRecord(hashedData); 
+    console.log(data)
+})
 
-    if(!isNumberVerified)
-    {
-        const randomString = crypto.randomString(6);
-        twilloClient.create({
-            from:'whatsapp:+4456979379',
-            body:'Your Chimp-tracker code is'+randomString
-        }).then(()=>{
-            
-        })
-        // save verified number here
-        // save code and phone number to DB
-    }
+
+router.get('/', async(req,res)=> {
+    const {whatsapp_number} = req.params
+})
+
+router.put('/update', async (req,res)=> {
+})
+
+router.delete('/delete', async(req,res)=> {
 
 })
+
+
+module.exports = router;
