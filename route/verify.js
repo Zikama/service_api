@@ -1,7 +1,7 @@
 const {param} = require ('../db/config.js')
 const express = require('express')
 const {verificationMessage} = require("../middleware/twillo.js"); 
-const {createRecord} = require("../db/queries/verify.js")
+const {createRecord, getRecordsByUser} = require("../db/queries/verify.js")
 require('dotenv').config()
 const router = express.Router();
 
@@ -17,13 +17,14 @@ router.post('/',async(req,res) => {
     const {whatsapp_number} = req.body;
 
     // provision DB 
-    // const isNumberVerified = await checkUserbyNumber(whatsapp_number);
-    // if(isNumberVerified) res.status(400).send('already connected');
+    const isNumberVerified = await getRecordsByUser(whatsapp_number,'verification-table');
+    if(isNumberVerified) res.status(400).send('already connected');
 
     // turn it to hash numbers 
-    const hashedData =  verificationMessage(whatsapp_number);
-    const data = await createRecord(hashedData); 
-    console.log(data)
+    await verificationMessage(whatsapp_number).then((data)=> {
+       if(data != undefined)createRecord(data,'verification-table')
+    })
+        
 })
 
 

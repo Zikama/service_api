@@ -8,7 +8,7 @@ const authToken = process.env.TWILLO_TOKEN;
 const twilioClient = new twilio(accountSid,authToken)
 
 
-const verificationMessage = (number)=> {
+const verificationMessage = async (number)=> {
 
     // generate random 6 digital numeric code
     const code = cryptoRandomString({length:6,type:'numeric'})
