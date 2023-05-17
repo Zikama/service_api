@@ -8,26 +8,34 @@ const authToken = process.env.TWILLO_TOKEN;
 const twilioClient = new twilio(accountSid,authToken)
 
 
-const verificationMessage = async (number)=> {
+const sendCode = async (number)=> {
 
     // generate random 6 digital numeric code
+
     const code = cryptoRandomString({length:6,type:'numeric'})
+    const sid = cryptoRandomString({length:10,type:'base64'})
+    let data = encrypt(code); 
+    data['id'] = sid;
+    data['number'] = number
+    data['status'] = 'unverified';
+    return data;
+    
 
-    // send verification 
-    twilioClient.messages.create({
-        from:`whatsapp:${process.env.TWILLO_NO}`,
-        body:
-        `SaveSphere: ${code} is your verification code. \nDon't share your code.`,
-        to:`whatsapp:${number}`
-    }).then(message => {
-        let data = encrypt(code); 
-        data['id'] = message.sid;
-        data['number'] = number
-        return data;
-    })
+    // send verification code
+    // twilioClient.messages.create({
+    //     from:`whatsapp:${process.env.TWILLO_NO}`,
+    //     body:
+    //     `SaveSphere: ${code} is your verification code. \nDon't share your code.`,
+    //     to:`whatsapp:${number}`
+    // }).then(message => {
+    //     let data = encrypt(code); 
+    //     data['id'] = message.sid;
+    //     data['number'] = number
+    //     return data;
+    // })
 
-}
+} 
 
 module.exports = {
-    verificationMessage
+    sendCode
 }
