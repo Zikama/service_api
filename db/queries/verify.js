@@ -2,32 +2,37 @@ const  {docClient} = require("../config.js");
 
 
 // create new items 
-const createRecord = async(data,tableName) => {
-    const {id,number,iv,content} = data
+const createRecord = async(data,tableName,res) => {
+    const {id,number,iv,content,status} = data
     const params = {
         TableName: tableName,
         Item:{
             number:number,
             id:id,
             iv:iv,
-            content:content
+            content:content,
+            status:status 
         }
     }
     try{
-        const data = docClient.put(params).promise()
+        const data = await docClient.put(params).promise()
         console.log('Added item:', JSON.stringify(data, null, 2));
+        res.status(200).json({ok:true});
 
     }catch(err){
         console.log('Unable to add item. Error JSON:', JSON.stringify(err,null,2));
+        res.status(500).json({
+            message: "error registering Number"
+        });
     }
 }
 
 // checkRecord with user number
 const getRecordsByUser = async (number,tableName)=> {
     const params = {
-        TableName:'verification-table',
+        TableName: tableName,
         Key:{
-            number:'+44546979379'
+            number: number
         }
     }
 
@@ -36,13 +41,12 @@ const getRecordsByUser = async (number,tableName)=> {
         return data.Item;
 
     }catch(error){
-        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        console.error("Unable to read item. Error JSON:", JSON.stringify(error, null, 2));
     }
 }
 
-
-// update items
-const updateUserRecord = async(number,tableName)=> {
+// verifies decrypted token against user inputted code
+const updateUserRecord = async(number,tableName,res)=> {
 
     const params = {
         TableName:tableName,
@@ -65,30 +69,35 @@ const updateUserRecord = async(number,tableName)=> {
     try{
         const data = await docClient.update(params).promise(); 
         console.log('Updated item:', JSON.stringify(data, null, 2));
+        res.status(200).json({ok:true})
     }catch(error){
-        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        console.error("Unable to read item. Error JSON:", JSON.stringify(error, null, 2));
+        res.status(500).json({message:"Unable to read item"})
     }
 }
 
-// delete items
-const removeRecord = async(number,tableName)=> {
+// delete user items 
+const removeRecord = async(number,tableName, res)=> {
     const params = {
         TableName:tableName,
         Key: {
             number:number,
-
         }
     }
     try{
         docClient.delete(params, (error,data)=> {
+            console.log(params);
             if(error){
-                console.error("unable to read item. Error JSON:",JSON.stringify(error, null, 2))
+                
             }
-            console.log({body: JSON.stringify(data)})
+            res.status(200).json({
+                ok:true
+            })
         })
 
     }catch(erorr){
-        console.error(erorr)
+        console.error("unable to read item. Error JSON:",JSON.stringify(error, null, 2))
+        res.status(500).json({message:erorr})
     }
 
 }
@@ -98,5 +107,4 @@ module.exports = {
     getRecordsByUser,
     updateUserRecord,
     removeRecord
-
 }
