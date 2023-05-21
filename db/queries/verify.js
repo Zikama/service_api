@@ -28,7 +28,7 @@ const createRecord = async(data,tableName,res) => {
 }
 
 // checkRecord with user number
-const getRecordsByUser = async (number,tableName)=> {
+const getRecordsByNumber = async (number,tableName)=> {
     const params = {
         TableName: tableName,
         Key:{
@@ -45,6 +45,7 @@ const getRecordsByUser = async (number,tableName)=> {
     }
 }
 
+// TODO: function should be only cater for updating records not sending server response
 // verifies decrypted token against user inputted code
 const updateUserRecord = async(number,tableName,res)=> {
 
@@ -104,7 +105,7 @@ const removeRecord = async(number,tableName, res)=> {
 
 module.exports = {
     createRecord,
-    getRecordsByUser,
+    getRecordsByNumber,
     updateUserRecord,
     removeRecord
 }

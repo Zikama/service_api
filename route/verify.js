@@ -1,7 +1,7 @@
 const express = require('express')
 const {sendCode} = require("../middleware/twillo.js"); 
-const {createRecord, getRecordsByUser,updateUserRecord,removeRecord } = require("../db/queries/verify.js")
-const {decrypt} = require('../middleware/transformer.js')
+const {createRecord, getRecordsByNumber,updateUserRecord,removeRecord } = require("../db/queries/verify.js")
+const {decrypt} = require('../middleware/index.js')
 require('dotenv').config()
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.post('/',async(req,res) => {
     const {number} = req.body;
         
     // checks if number is regsitered
-    const isNumberRegistered = await getRecordsByUser(number,'verification-table');
+    const isNumberRegistered = await getRecordsByNumber(number,'verification-table');
 
     // if number is registered, mnessage is sent to client
     if(isNumberRegistered) {
@@ -35,7 +35,7 @@ router.put('/:number', async (req,res)=> {
     const {code} = req.body;
 
     // gets user record using user phone number
-    const data = await getRecordsByUser(number,'verification-table'); 
+    const data = await getRecordsByNumber(number,'verification-table'); 
 
     // encrypted data is consumed and real code is emitted
     const decryptedCode = decrypt(data);

@@ -1,13 +1,13 @@
 require('dotenv').config();
 const  twilio =  require('twilio')
 const cryptoRandomString = require('crypto-random-string'); 
-const {encrypt} = require('../middleware/transformer')
+const {encrypt} = require('.')
 
 const accountSid = process.env.TWILLO_SID;
 const authToken = process.env.TWILLO_TOKEN;
 const twilioClient = new twilio(accountSid,authToken)
 
-
+// function sends a six-digit verification to user 
 const sendCode = async (number)=> {
 
     try{
@@ -32,6 +32,7 @@ const sendCode = async (number)=> {
     // generate random 6 digital numeric code
 
 } 
+
 
 module.exports = {
     sendCode
