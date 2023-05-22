@@ -29,8 +29,6 @@ const sendCode = async (number)=> {
         console.error(error);
     }
 
-    // generate random 6 digital numeric code
-
 } 
 
 

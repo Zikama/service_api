@@ -21,7 +21,7 @@ router.post('/',async(req,res) => {
         })
     }
 
-    // check is number is not registered and sends verification to user
+    // check if number is not registered and sends verification to user
     if(!isNumberRegistered){
         const data = await sendCode(number); 
         await createRecord(data,'verification-table',res)

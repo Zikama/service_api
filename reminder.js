@@ -1,9 +1,15 @@
+/**
+ * TODO:still incomplete
+ * lambda function Js file that sends schedules messages using AWS eventBridge scheduler see eventbridge JS
+ */
+
+
 const  twilio =  require('twilio');
+const AWS = require('aws-sdk')
 require("dotenv").config();
 
 // dynamoDB config
-AWS.config.update({region:'eu-west-2'});
-const dynamoDb = new AWS.DynamoDB({apiVersion:'2012-08-10'})
+AWS.config.update({region:process.env.AWS_REGION});
 const docClient = new AWS.DynamoDB.DocumentClient(); 
 
 // twilio env variables
@@ -13,6 +19,7 @@ const authToken = process.env.TWILLO_TOKEN;
 // new twilio client
 const twilioClient = new twilio(accountSid,authToken)
 
+// function gets user reminder item
 const getUserReminder = async(data) => {
 
     const params = {
@@ -34,30 +41,22 @@ const getUserReminder = async(data) => {
     
 }
 
-
-
-
+// send sms to number to remind me about a reminder
 exports.handler = async(event)=> {
 
-    // get data from db
-    const getReminder = await getUserReminder(event.detail);
+    // get data from dynamoDB
+    const userInformation = await getUserReminder(event.detail);
 
     await twilioClient.messages.create({
-        from:`whatsapp:${process.env.TWILLO_NO}`,
-        body:
-        `SaveSphere: ${code} is your verification code. \nDon't share your code.`,
-        to:`whatsapp:${number}`
+        from:`${process.env.TWILLO_NO}`,
+        body:`Hi There, we are testing scheduling stuff with twilio`,
+        to:`${userInformation.number}`
     }).then((message) => {
-    
-    
+
+        // update Sid; 
+        // update DB that first message was sent
+        // check if userinformation matches current data, if yes delete eventbridge scheduler. 
     })
-    
-
-
-    
-    // construct message
-    // craft message and send
-    // update data from db
     
 
   

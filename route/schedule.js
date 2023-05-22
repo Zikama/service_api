@@ -17,7 +17,8 @@ router.post('/', asyncWrapper(async(req,res)=> {
 
         if(isUserVerified)
         {
-            const eventData = await saveReminderItem(data[0],'reminders')
+            const eventData = await saveReminderItem(data[0],'reminders');
+            
         }
 
 
@@ -33,9 +34,9 @@ router.post('/', asyncWrapper(async(req,res)=> {
         // 
 }))
 
-
+// route to return number of scheduled services to UI
 router.get('/', asyncWrapper(async(res,req)=> {
-    // send already registered user 
+     
 }))
 
 
