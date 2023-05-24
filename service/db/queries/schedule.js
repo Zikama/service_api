@@ -33,14 +33,13 @@ const saveReminderItem = async(data,tableName)=> {
         }
     }
 
-    try{
-        await docClient.put(params).promise();
-        console.log('Added items');
-        return true
-    }catch(error){
-        console.log(error.message)
 
-    }
+   Promise.resolve(docClient.put(params).promise()).then(()=> {
+        console.log('Added items');
+    });
+      
+ 
+
 }
 
 module.exports = {

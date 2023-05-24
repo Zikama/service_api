@@ -9,21 +9,21 @@ const {scheduleBillingReminder} = require('../middleware/eventbridge')
 // routes sets reminder cron jobs for user registered services
 router.post('/', asyncWrapper(async(req,res)=> {
     
-        // const { data } = req.body; 
+    try{    // const { data } = req.body; 
         const isUserVerified = await checkUserStatus(data[0]); 
 
         // checks if userstatus is false 
         if(!isUserVerified) res.status(409).json({ message:'record not found'});
 
-        if(isUserVerified)
-        {
-            await scheduleBillingReminder(data[0])
-            await saveReminderItem(data[0],'reminders').then((response)=>{
-                if(response) res.status(200).json({
-                    ok:true
-                })
-            });
-        } 
+        // saves reminder to scheduler 
+        await scheduleBillingReminder(data[0],res)
+    }catch(error){
+        res.status(500).json(
+            {
+                messsage:error.message
+            }
+        )
+    }
 }))
 
 // route to return number of scheduled services to UI
