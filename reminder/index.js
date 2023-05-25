@@ -31,7 +31,7 @@ const updateReminderRecord = async(number,sid)=> {
         UpdateExpression: 'set #sid = :sid',
         ExpressionAttributeNames:{'#sid': 'sid'},
         ExpressionAttributeValues:{
-            ':sid': [sid]
+            ':sid': sid
         }, 
         ReturnValues:'UPDATED_NEW'
     }
@@ -63,59 +63,35 @@ const getUserReminder = async(number) => {
     
 }
 
-
-/**
- * MESSAGE SECTION
- */
-// first message
-const firstMessage = (postedBy) => {
-    return `Hi ${postedBy}, we are sending first reminder message`
-}
-
-// second message
-const secondMessage = (postedBy)=> {
-    return `Hi ${postedBy}, we are sending you the last message`
-}
-
-
 // send sms to number to remind me about a reminder
 exports.handler = async(event)=> {
 
     try{
         const payLoad = await getUserReminder(event.number);
 
-        // checks if a previous message is sent
-        const sidLength = payLoad.sid.length 
-    
-        //removes eventbridge scheduler if first message is sent
-        if(sidLength){
-            
-            const payload = {
-                   Name:payLoad.bus.toString()
-            };
-    
-            await scheduler.deleteSchedule(payload).promise();
-        } 
-        
-        // chooses the right message based on db SID value
-        const messageBody = sidLength ? secondMessage (payLoad.postedBy) : firstMessage(payLoad.postedBy);
-    
         // sends message to user and returns message SID
         const messageSid = await twilioClient.messages.create({
-            from:`${process.env.TWILLO_NO}`,
-            body:messageBody,
-            to:`${payLoad.number}`
+            from:`whatsapp:${process.env.TWILLO_NO}`,
+            body:
+            `Hi ${payLoad.postedBy}, your Free trials on ${payLoad.name} will expire tomorrow, and you will likely be charged as a premium customer. 
+    Kindly let us know your desired actions for this upcoming billing. `,
+            to:`whatsapp:${payLoad.number}`
         }).then( message => message.sid);
     
-    
-       updateReminderRecord(payLoad.number,messageSid).then(()=> {
-            return{
-                statusCode: 200,
-                body: JSON.stringify({
-                    message: 'success'
-                })
-            }
-       });
+      const isReminderUpdated =  await updateReminderRecord(payLoad.number,messageSid);
+      if(isReminderUpdated)
+      {
+        const payload = {Name:`${payLoad.bus}`};
+        await scheduler.deleteSchedule(payload).promise();
+        
+        return{
+            statusCode: 200,
+            body: JSON.stringify({
+                message: 'success'
+            })
+        }
+      }
+
     }catch(error){
         console.log(error)
     }

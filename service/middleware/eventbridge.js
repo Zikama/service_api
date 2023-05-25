@@ -10,7 +10,7 @@ const scheduleBillingReminder = async(data,res) => {
               Mode: 'OFF',
             },
             Name: 'test_scheduler',
-            ScheduleExpression: 'rate(5 minutes)',
+            ScheduleExpression: data.rate,
             Target: {
               Arn: `arn:aws:lambda:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT_ID}:function:reminder`,
               RoleArn: `arn:aws:iam::${process.env.AWS_ACCOUNT_ID}:role/scheduler_role`,
