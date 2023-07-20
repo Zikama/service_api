@@ -9,7 +9,7 @@ const scheduleBillingReminder = async(data,res) => {
           FlexibleTimeWindow: {
               Mode: 'OFF',
             },
-            Name: 'test_scheduler',
+            Name: data.bus,
             ScheduleExpression: data.rate,
             Target: {
               Arn: `arn:aws:lambda:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT_ID}:function:reminder`,
@@ -21,15 +21,17 @@ const scheduleBillingReminder = async(data,res) => {
               },
             },
             ScheduleExpressionTimezone: 'Europe/London',
-            StartDate:data.firstReminder,
-            EndDate:data.endReminder
       }
 
       scheduler.createSchedule(payload, async (err)=> {
+          console.log(err);
           if(err){
+
             console.trace('error creating scheduler')
             res.status(409).json({message: err.message})
+
           }else{
+
             await saveReminderItem(data,'reminders')
             res.status(200).json({ok: true})
           }

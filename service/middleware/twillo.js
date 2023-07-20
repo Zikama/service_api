@@ -19,6 +19,7 @@ const sendCode = async (number)=> {
             `SaveSphere: ${code} is your verification code. \nDon't share your code.`,
             to:`whatsapp:${number}`
         }).then((message) => message.sid)
+        console.trace('code sent here')
         let data = encrypt(code); 
         data['id'] = sid;
         data['number'] = number
@@ -30,6 +31,7 @@ const sendCode = async (number)=> {
     }
 
 } 
+
 
 
 module.exports = {

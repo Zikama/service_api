@@ -1,6 +1,6 @@
 /**
  * TODO:still incomplete
- * lambda function Js file that sends schedules messages using AWS eventBridge scheduler see eventbridge JS
+ * lambda function Js sends schedules messages using AWS eventBridge scheduler see eventbridge.js file.
  */
 require("dotenv").config();
 const  twilio =  require('twilio');
@@ -65,17 +65,16 @@ const getUserReminder = async(number) => {
 
 // send sms to number to remind me about a reminder
 exports.handler = async(event)=> {
-
     try{
         const payLoad = await getUserReminder(event.number);
 
         // sends message to user and returns message SID
         const messageSid = await twilioClient.messages.create({
-            from:`whatsapp:${process.env.TWILLO_NO}`,
+            from:'whatsapp:'+process.env.TWILLO_NO,
             body:
             `Hi ${payLoad.postedBy}, your Free trials on ${payLoad.name} will expire tomorrow, and you will likely be charged as a premium customer. 
     Kindly let us know your desired actions for this upcoming billing. `,
-            to:`whatsapp:${payLoad.number}`
+            to:'whatsapp:'+ payLoad.number
         }).then( message => message.sid);
     
       const isReminderUpdated =  await updateReminderRecord(payLoad.number,messageSid);
@@ -95,7 +94,4 @@ exports.handler = async(event)=> {
     }catch(error){
         console.log(error)
     }
- 
-
-  
 }

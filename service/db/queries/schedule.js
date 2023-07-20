@@ -16,7 +16,7 @@ const checkUserStatus = async(data)=> {
 
 // functions saves reminder item to table
 const saveReminderItem = async(data,tableName)=> {
-    const {name,postedBy,number,domain,starts,ends,bus,rate} = data
+    const {name,postedBy,number,domain,bus,rate} = data
 
     const params = {
         TableName: tableName,
@@ -25,8 +25,6 @@ const saveReminderItem = async(data,tableName)=> {
             name:name,
             postedBy:postedBy,
             domain:domain,
-            starts:starts,
-            ends:ends,
             sid:'',
             rate:rate,
             bus:bus
