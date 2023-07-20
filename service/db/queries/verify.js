@@ -17,7 +17,7 @@ const createRecord = async(data,tableName,res) => {
     try{
         const data = await docClient.put(params).promise()
         console.log('Added item:', JSON.stringify(data, null, 2));
-        res.status(200).json({ok:true});
+        res.status(200).json({message:true});
 
     }catch(err){
         console.log('Unable to add item. Error JSON:', JSON.stringify(err,null,2));
@@ -70,7 +70,7 @@ const updateUserRecord = async(number,tableName,res)=> {
     try{
         const data = await docClient.update(params).promise(); 
         console.log('Updated item:', JSON.stringify(data, null, 2));
-        res.status(200).json({ok:true})
+        res.status(200).json({message:true})
     }catch(error){
         console.error("Unable to read item. Error JSON:", JSON.stringify(error, null, 2));
         res.status(500).json({message:"Unable to read item"})
@@ -92,7 +92,7 @@ const removeRecord = async(number,tableName, res)=> {
                 
             }
             res.status(200).json({
-                ok:true
+                message:true
             })
         })
 
