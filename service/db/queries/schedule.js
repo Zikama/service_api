@@ -2,9 +2,9 @@ const {getRecordsByNumber} = require("../queries/verify.js")
 const  {docClient} = require("../config.js");
 
 // function checks if gets users record by number and 
-const checkUserStatus = async(data)=> {
+const checkUserStatus = async(number)=> {
     try{
-        const userItem = await getRecordsByNumber(data.number,'verification-table');
+        const userItem = await getRecordsByNumber(number,'verification-table');
       if(userItem.status == 'verified') return true
 
     }catch(error){
@@ -16,7 +16,7 @@ const checkUserStatus = async(data)=> {
 
 // functions saves reminder item to table
 const saveReminderItem = async(data,tableName)=> {
-    const {name,postedBy,number,domain,bus,rate} = data
+    const {name,postedBy,number,domain,bus,rate, days, serviceType} = data
 
     const params = {
         TableName: tableName,
@@ -27,7 +27,9 @@ const saveReminderItem = async(data,tableName)=> {
             domain:domain,
             sid:'',
             rate:rate,
-            bus:bus
+            bus:bus, 
+            days:days,
+            serviceType:serviceType
         }
     }
 

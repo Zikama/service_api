@@ -11,9 +11,9 @@ router.post('/', asyncWrapper(async(req,res)=> {
     
     try{    
         const data  = req.body; 
+        const userNumber = data.number
 
-        const isUserVerified = await checkUserStatus(data); 
-        console.log(isUserVerified);
+        const isUserVerified = await checkUserStatus(userNumber); 
 
         // checks if userstatus is not verified
         if(!isUserVerified) res.status(409).json({ message:'record not found'});
