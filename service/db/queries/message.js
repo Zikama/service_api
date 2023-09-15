@@ -1,4 +1,4 @@
-const  {docClient} = require("../config.js");
+const  {docClient, ClientPromise} = require("../config.js");
 
 const getRecordBySid = async(sid)=> {
     const params = {
@@ -23,6 +23,56 @@ const getRecordBySid = async(sid)=> {
     
 }
 
+// updates service types by taking userId and name of service
+const updateServiceType = async(postedBy,name) => {
+    const db = (await ClientPromise).db(); 
+    try{
+       
+    
+    // find service by user id (posted by and service name)
+    // updates serviceType from free trials to subscriptions
+    db.collection("userTrials").findOneAndUpdate({
+        $and:[
+            {postedBy:postedBy}, 
+            {name:name}
+        ]}, {
+            $set:{
+                serviceType:"subscription", 
+            }
+        }, {upsert:true})
+
+    return true;
+
+    }catch(error){
+        console.error("unable to find and update user service:", error); 
+        return false
+    }
+     
+
+}
+
+const deleteService = async(postedBy,name)=> {
+    const db = (await ClientPromise).db(); 
+    try{
+
+        // checks for services that matches the servicename and user postedby Id
+        // and removes service from document
+        db.collection("userTrials").deleteOne({
+            $and : [
+                {postedBy: postedBy},
+                {name:  name}
+        ]})
+
+
+    }catch(error){
+        console.log('unable to remove service:',error)
+        return false
+    }
+
+}
+
 module.exports = {
-    getRecordBySid
+    getRecordBySid,
+    updateServiceType,
+    deleteService
 }
