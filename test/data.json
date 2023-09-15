@@ -1,0 +1,31 @@
+
+// data accepted to schedule service 
+[
+    {
+        "bus": "slack_scheduler",
+        "days": "3 days",
+        "domain": "Peloton.com",
+        "name": "Peloton",
+        "number": "+447546979379",
+        "postedBy": "nehmie",
+        "rate": "at(2023-10-12T16:28:00)",
+        "serviceType": "Free trial || subscriptions" ,
+        "sid": "SM55e2793ec67270530a0e24928deee4b2",
+        "userId": "64d343c5c3dd0151e850d47f"
+    }
+]
+
+// updated JSON structure for userTrials service 
+[
+    {"_id":{"$oid":"64d432f2e2928a496ef1d6fa"}
+    ,"name":"Peloton",
+    "icon":"https://www.google.com/s2/favicons?domain=onepeloton.co.uk",
+    "domain":"onepeloton.co.uk",
+    "ends":"2023-09-14T00:43:59.953Z",
+    "starts":"2023-08-10T00:43:59.953Z",
+    "postedBy":"64d343c5c3dd0151e850d47f",
+    "isReminderset":false,
+    "serviceType":"subscription"
+    }
+]
+   
