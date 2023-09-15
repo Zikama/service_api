@@ -15,8 +15,7 @@ const sendCode = async (number)=> {
         // send verification code
        const sid = await  twilioClient.messages.create({
             from:`whatsapp:${process.env.TWILLO_NO}`,
-            body:
-            `SaveSphere: ${code} is your verification code. \nDon't share your code.`,
+            body:`*${code}* is your verification code. For your security, do not share this code.`,
             to:`whatsapp:${number}`
         }).then((message) => message.sid)
         console.trace('code sent here')
