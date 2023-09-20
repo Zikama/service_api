@@ -38,13 +38,6 @@ if(!PORT){
    ClientPromise = global._mongoClientPromise
 }
 
-export default 
-
-
-
-
-
-
 
 
 module.exports= {

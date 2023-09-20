@@ -62,7 +62,7 @@ const updateUserRecord = async(number,tableName,res)=> {
             '#content': 'content'
         },
         ExpressionAttributeValues:{
-            ':status': 'verified'
+            ':status': true
         }, 
         ReturnValues:'UPDATED_NEW'
     }

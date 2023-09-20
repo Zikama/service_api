@@ -22,7 +22,7 @@ const sendCode = async (number)=> {
         let data = encrypt(code); 
         data['id'] = sid;
         data['number'] = number
-        data['status'] = 'unverified';
+        data['status'] = false;
         return data;
 
     }catch(error){

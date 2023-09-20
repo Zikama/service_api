@@ -5,7 +5,7 @@ const  {docClient} = require("../config.js");
 const checkUserStatus = async(number)=> {
     try{
         const userItem = await getRecordsByNumber(number,'verification-table');
-      if(userItem.status == 'verified') return true
+        return userItem.status
 
     }catch(error){
         return false
@@ -16,7 +16,7 @@ const checkUserStatus = async(number)=> {
 
 // functions saves reminder item to table
 const saveReminderItem = async(data,tableName)=> {
-    const {name,postedBy,number,domain,bus,rate, days, serviceType} = data
+    const {name,postedBy,number,domain,bus,rate, days, serviceType,userId} = data
 
     const params = {
         TableName: tableName,
@@ -25,11 +25,12 @@ const saveReminderItem = async(data,tableName)=> {
             name:name,
             postedBy:postedBy,
             domain:domain,
-            sid:'',
+            sid: bus, // temporary SID 
             rate:rate,
             bus:bus, 
             days:days,
-            serviceType:serviceType
+            serviceType:serviceType,
+            userId:userId
         }
     }
 

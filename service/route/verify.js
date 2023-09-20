@@ -12,17 +12,19 @@ router.post('/',async(req,res) => {
     const {number} = req.body;
         
     // checks if number is regsitered
-    const isNumberRegistered = await getRecordsByNumber(number,'verification-table');
+    const userData = await getRecordsByNumber(number,'verification-table');
+
+    
 
     // if number is registered, mnessage is sent to client
-    if(isNumberRegistered) {
+    if(userData?.status) {
         res.status(409).json({
-            message: "Number already registered"
+            message: 'registered'
         })
     }
 
     // check if number is not registered and sends verification to user
-    if(!isNumberRegistered){
+    if(!userData?.status){
         const data = await sendCode(number); 
         await createRecord(data,'verification-table',res)
     }   
