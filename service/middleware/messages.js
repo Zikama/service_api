@@ -2,7 +2,7 @@
 const {updateServiceType,deleteService } = require('../db/queries/message')
 
   // sends response to user message
-function processResponse(userId,serviceName,Body,serviceType){
+function processResponse(userId,serviceName,Body,serviceType,ends){
 
     let message
 
@@ -13,21 +13,14 @@ function processResponse(userId,serviceName,Body,serviceType){
         case "Cancel for me":
             message = autoCancelMessage()
             break;
-        case "I'm subcribing": 
+        case "I am subscribing":
 
-            let isServiceUpdated = true;
-            
-            if(serviceType === 'Free trial'){
-                isServiceUpdated  = updateServiceType(userId,serviceName); 
-                message = serviceUpdateMessage(serviceName)
-            }
-        
-            if(!isServiceUpdated){
-                return 'sorry we are unable to process your request, one of our team member will reach out to you. '
-            }
+            const isServiceUpdate = updateServiceType(userId,serviceName,ends)
 
-    
-            // return message
+            if(!isServiceUpdate) return 'Sorry we are unable to update your subscription, kindly try again.'
+
+            message = serviceUpdateMessage(serviceName, serviceType)
+          
             break; 
         case "I cancelled myself":
             let isServiceDeleted = deleteService(userId,serviceName)
@@ -45,13 +38,13 @@ function processResponse(userId,serviceName,Body,serviceType){
 
 
 const autoCancelMessage = () => {
-    return `We are currently unable to cancel your subscription. Please apply for our business virtual cards to cancel your subscriptions from here. Kindly email cards@joineconome.com to get started. `
+    return `We are currently unable to cancel your subscription. Please apply for our virtual card to cancel your subscriptions from here. Get started here: https://bit.ly/3Pr0Cxl `
 }
 
-const serviceUpdateMessage = (serviceName) => {
+const serviceUpdateMessage = (serviceName,serviceType) => {
+    const message = serviceType === 'trial' ? `We have successfully registered ${serviceName} as a subscription. ` : `We have successfully rolled over ${serviceName} as an expense for the coming months. `
 
-   return `We have successfully registered ${serviceName} as a subscription. We would like to know if you want us to remind you about your next billing. `
-
+   return message
 }
 
 const serviceRemovalMessage = (serviceName) => {

@@ -12,13 +12,13 @@ router.post('/', asyncWrapper(async(req,res)=> {
 
     
         // get service from user record from DynamoDB
-        const {userId,name, serviceType } = await getRecordBySid(OriginalRepliedMessageSid);
+        const {userId,name, serviceType,ends} = await getRecordBySid(OriginalRepliedMessageSid);
         
     
         // get user service and process response based on user response 
         // subscription moves it to subscription 
         // I cancelled removes subscription 
-        const messageResponse = processResponse(userId,name,Body,serviceType);
+        const messageResponse = processResponse(userId,name,Body,serviceType,ends);
 
         const message = new MessagingResponse().message(messageResponse);
 

@@ -24,10 +24,11 @@ const getRecordBySid = async(sid)=> {
 }
 
 // updates service types by taking userId and name of service
-const updateServiceType = async(postedBy,name) => {
+const updateServiceType = async(postedBy,name,ends) => {
     const db = (await ClientPromise).db(); 
     try{
-       
+    let endingDate = new Date(ends)
+    endingDate = new Date(endingDate.setMonth(endingDate.getMonth() + 1) )
     
     // find service by user id (posted by and service name)
     // updates serviceType from free trials to subscriptions
@@ -37,11 +38,12 @@ const updateServiceType = async(postedBy,name) => {
             {name:name}
         ]}, {
             $set:{
-                serviceType:"subscription", 
+                serviceType:"subscription",
+                ends: endingDate
             }
-        }, {upsert:true})
-
-    return true;
+        }, {upsert:true},(err)=> {
+            if(!err) return true
+        }); 
 
     }catch(error){
         console.error("unable to find and update user service:", error); 
@@ -50,6 +52,8 @@ const updateServiceType = async(postedBy,name) => {
      
 
 }
+
+// update servicebyDate
 
 const deleteService = async(postedBy,name)=> {
     const db = (await ClientPromise).db(); 
