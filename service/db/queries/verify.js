@@ -29,6 +29,7 @@ const createRecord = async(data,tableName,res) => {
 
 // checkRecord with user number
 const getRecordsByNumber = async (number,tableName)=> {
+    try{
     const params = {
         TableName: tableName,
         Key:{
@@ -36,7 +37,6 @@ const getRecordsByNumber = async (number,tableName)=> {
         }
     }
 
-    try{
         const data = await docClient.get(params).promise()
         return data.Item;
 
